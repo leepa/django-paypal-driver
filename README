@@ -1,0 +1,49 @@
+README for django-paypal-driver
+ 
+Pluggable PayPal NVP (Name Value Pair) API implementation for Django based web applications.
+
+Installation
+============
+    All you need to do is copying the "paypal" directory (or make a symbolink) under one of the directories in your PYTHON_PATH such as:
+
+    If you are using Python 2.5;
+    - /usr/local/lib/python2.5/site-packages/
+    - /usr/lib/python2.5/site-packages/
+
+    If you are using Python 2.6;
+    - /usr/local/lib/python2.6/dist-packages/
+    - /usr/lib/python2.6/dist-packages/
+
+Example
+=======
+
+Once you copy the "paypal" drectory under your PYTHON_PATH; you can enter shell by typing "python manage.py shell" command under your project root. 
+
+You need to define your PayPal API Credientials in your projects settings file. Those are;
+    - PAYPAL_USER (api username)
+    - PAYPAL_PASSWORD (api password)
+    - PAYPAL_SIGNATURE (api signature)
+
+Then you can actually perform the following methods;
+
+    In [1]: from paypal.driver import PayPal
+
+    In [2]: p = PayPal(debug = True)
+
+    In [3]: p.SetExpressCheckout("10.00", "USD", "http://localhost/return", "http://localhost/cancel")
+
+    - - - - - - - - - - 
+    You can see the error that the server sends bu calling
+    - p.apierror
+
+    Also, you can see the full response that comes from the PayPal server by typing
+    - p.api_response
+
+    when you are in python shell.
+    - - - - - - - - - - 
+    
+    In [4]: p.DoExpressCheckoutPayment("USD", "10.00", "token", "payerid")
+    
+Also you can refund money;
+
+   In [5]: p.RefundTransaction(transid = "transactionid", refundtype = "Partial", currency = "USD", amount = "10.00")

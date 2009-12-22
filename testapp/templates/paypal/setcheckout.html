@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Django PayPal Test Application</title>
+  </head>
+  <body>    
+    <table border="0" style="border:1px solid silver;text-align:center" cellpadding="5px">
+      <tr><th>Amount to be charged</th><td>$10</td></tr>
+      <tr><th>Return URL</th><td>{% url paypal-docheckout %}</td></tr>
+      <tr><th>Cancel URL</th><td>{% url base-cancel %}</td></tr>
+      <tr><th>Error URL</th><td>{% url base-error %}</td></tr>
+    </table>
+    <p>Please the button below to start <i>PayPal Checkout Process</i></p>
+    <form action="{% url paypal-setcheckout %}" method="POST">
+      <input type="hidden" name="amount" value="10.00" />
+      <input type="image" src="http://www.paypal.com/en_US/i/btn/x-click-but5.gif" />
+    </form>
+  </body>
+</html>
