@@ -44,9 +44,10 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, "templates")
 )
 
-PAYPAL_USER  = "seller_1261493801_biz_api1.akinon.com"
-PAYPAL_PASSWORD = "1261493806"
-PAYPAL_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A-wla4a4Wt-Cri8WHGG4YhDjPWuQ"
+PAYPAL_USER  = "seller_1261519973_biz_api1.akinon.com"
+PAYPAL_PASSWORD = "1261519978"
+PAYPAL_SIGNATURE = "A1.OnfcjaBVTgV6Yt.oT2VavxcyOA5FGVe-MrNf.1R1zNVAD6.MDOKZO"
+PAYPAL_DEBUG = True
 
 INSTALLED_APPS = (
     'django.contrib.auth',

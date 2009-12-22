@@ -40,10 +40,10 @@ class PayPal(object):
         # You can use the following api credientials for DEBUGGING. (in shell)
 
         # First step is to get the correct credientials.
-        if debug or getattr(settings, "DEBUG", False):
-            self.username  = "seller_1261493801_biz@akinon.com"
-            self.password  = "1261493806"
-            self.sign = "AFcWxV21C7fd0v3bYYYRCpSSRl31A-wla4a4Wt-Cri8WHGG4YhDjPWuQ"
+        if debug or getattr(settings, "PAYPAL_DEBUG", False):
+            self.username  = "seller_1261519973_biz_api1.akinon.com"
+            self.password  = "1261519978"
+            self.sign = "A1.OnfcjaBVTgV6Yt.oT2VavxcyOA5FGVe-MrNf.1R1zNVAD6.MDOKZO"
         else:
             self.username  = getattr(settings, "PAYPAL_USER", None)
             self.password  = getattr(settings, "PAYPAL_PASSWORD", None)
@@ -56,7 +56,7 @@ class PayPal(object):
             "VERSION" : "53.0",
         }
         # Second step is to set the API end point and redirect urls correctly.
-        if debug or getattr(settings, "DEBUG", False):
+        if debug or getattr(settings, "PAYPAL_DEBUG", False):
             self.NVP_API_ENDPOINT    = "https://api-3t.sandbox.paypal.com/nvp"
             self.PAYPAL_REDIRECT_URL = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token="
         else:
