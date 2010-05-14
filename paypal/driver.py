@@ -36,18 +36,12 @@ class PayPal(object):
     
     def __init__(self, debug = False):
         # PayPal Credientials
-        
         # You can use the following api credientials for DEBUGGING. (in shell)
 
         # First step is to get the correct credientials.
-        if debug or getattr(settings, "PAYPAL_DEBUG", False):
-            self.username  = "seller_1261519973_biz_api1.akinon.com"
-            self.password  = "1261519978"
-            self.sign = "A1.OnfcjaBVTgV6Yt.oT2VavxcyOA5FGVe-MrNf.1R1zNVAD6.MDOKZO"
-        else:
-            self.username  = getattr(settings, "PAYPAL_USER", None)
-            self.password  = getattr(settings, "PAYPAL_PASSWORD", None)
-            self.sign      = getattr(settings, "PAYPAL_SIGNATURE", None)
+        self.username  = getattr(settings, "PAYPAL_USER", None)
+        self.password  = getattr(settings, "PAYPAL_PASSWORD", None)
+        self.sign      = getattr(settings, "PAYPAL_SIGNATURE", None)
 
         self.credientials = {
             "USER" : self.username,
@@ -55,6 +49,7 @@ class PayPal(object):
             "SIGNATURE" : self.sign,
             "VERSION" : "53.0",
         }
+        
         # Second step is to set the API end point and redirect urls correctly.
         if debug or getattr(settings, "PAYPAL_DEBUG", False):
             self.NVP_API_ENDPOINT    = "https://api-3t.sandbox.paypal.com/nvp"
