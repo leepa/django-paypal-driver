@@ -9,7 +9,7 @@ setup(
     description='Pluggable paypal nvp (Name Value Pair) API implementation for'
                 ' django based web applications.',
     long_description=open(README_PATH).read(),
-    author='Özgür Vatansever',
+    author='Ozgur Vatansever',
     author_email='ozgurvt@gmail.com',
     url='http://code.google.com/p/django-paypal-driver/',
     packages=['paypal'],
