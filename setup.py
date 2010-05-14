@@ -7,7 +7,7 @@ setup(
     name='django-paypal-driver',
     version='0.1',
     description='Pluggable paypal nvp (Name Value Pair) API implementation for'
-                ' django based web applications.'
+                ' django based web applications.',
     long_description=open(README_PATH).read(),
     author='Özgür Vatansever',
     author_email='ozgurvt@gmail.com',
