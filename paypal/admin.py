@@ -12,6 +12,8 @@ class PayPalResponseAdmin(admin.ModelAdmin):
                     'payment_received',
                     'status')
     list_filter = ("payment_received", "status")
+    
+    search_fields = ('token', 'trans_id')
 
 admin.site.register(PayPalResponse, PayPalResponseAdmin)
 admin.site.register(PayPalResponseStatus)

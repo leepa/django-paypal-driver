@@ -33,6 +33,9 @@ class PayPalResponse(models.Model):
         verbose_name = _("PayPal Response")
         verbose_name_plural = _("PayPal Responses")
         
+    def __unicode__(self):
+        return self.token
+        
     @staticmethod
     def get_default_status():
         ps, created = PayPalResponseStatus.objects.get_or_create(summary = _("Sale"))
