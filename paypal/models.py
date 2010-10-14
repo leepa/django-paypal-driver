@@ -34,7 +34,7 @@ class PayPalResponse(models.Model):
         verbose_name_plural = _("PayPal Responses")
         
     def __unicode__(self):
-        return self.token
+        return self.token or u''
         
     @staticmethod
     def get_default_status():
