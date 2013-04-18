@@ -22,18 +22,18 @@ GENERIC_PAYMENT_ERROR = "Transaction failed. Check out your order details again.
 GENERIC_REFUND_ERROR = "An error occured, we can not perform your refund request"
 
 class PayPal(object):
-    
+
     """
     Pluggable Python PayPal Driver that implements NVP (Name Value Pair) API methods.
     There are simply 3 main methods to be executed in order to finish the PayPal payment process.
     You explicitly need to define PayPal username, password and signature in your project's settings file.
-    
+
     Those are:
     1) SetExpressCheckout
     2) GetExpressCheckoutDetails (optional)
     3) DoExpressCheckoutPayment
     """
-    
+
     def __init__(self, debug = False):
         # PayPal Credientials
         # You can use the following api credientials for DEBUGGING. (in shell)
@@ -49,7 +49,7 @@ class PayPal(object):
             "SIGNATURE" : self.sign,
             "VERSION" : "53.0",
         }
-        
+
         # Second step is to set the API end point and redirect urls correctly.
         if debug or getattr(settings, "PAYPAL_DEBUG", False):
             self.NVP_API_ENDPOINT    = "https://api-3t.sandbox.paypal.com/nvp"
@@ -122,7 +122,7 @@ class PayPal(object):
             'AMT' : amount,
             'CURRENCYCODE' : currency,
         }
-        
+
         parameters.update(kwargs)
         query_string = self.signature + urllib.urlencode(parameters)
         response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
@@ -143,7 +143,7 @@ class PayPal(object):
 
     """
     If SetExpressCheckout is successfull use TOKEN to redirect to the browser to the address BELOW:
-    
+
      - https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=TOKEN (for development only URL)
 
     """
@@ -181,7 +181,7 @@ class PayPal(object):
 
         return True
 
-    def DoExpressCheckoutPayment(self, currency, amount, token = None, payerid = None):
+    def DoExpressCheckoutPayment(self, currency, amount, token = None, payerid = None, **kwargs):
         """
         This method performs the NVP API method that is responsible from doing the actual payment.
         All of the parameters are REQUIRED.
@@ -209,6 +209,7 @@ class PayPal(object):
             'CURRENCYCODE' : currency,
             'PAYERID' : payerid,
         }
+        parameters.update(kwargs)
         query_string = self.signature + urllib.urlencode(parameters)
         response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_tokens = {}
@@ -216,7 +217,7 @@ class PayPal(object):
             response_tokens[token.split("=")[0]] = token.split("=")[1]
         for key in response_tokens.keys():
             response_tokens[key] = urllib.unquote(response_tokens[key])
-                
+
         state = self._get_value_from_qs(response_tokens, "ACK")
         self.response = response_tokens
         self.api_response = response_tokens
@@ -226,10 +227,52 @@ class PayPal(object):
             return False
         return True
 
+    def DoCapture(
+        self,
+        currency,
+        amount,
+        authorizationid,
+        complete=False,
+        **kwargs
+    ):
+        if complete:
+            complete_type = 'Complete'
+        else:
+            complete_type = 'NotComplete'
+
+        parameters = {
+            'METHOD': 'DoCapture',
+            'AUTHORIZATIONID': authorizationid,
+            'AMT': amount,
+            'CURRENCYCODE': currency,
+            'COMPLETETYPE': complete_type
+        }
+
+        parameters.update(kwargs)
+        query_string = self.signature + urllib.urlencode(parameters)
+        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response_tokens = {}
+        for token in response.split('&'):
+            response_tokens[token.split("=")[0]] = token.split("=")[1]
+        for key in response_tokens.keys():
+            response_tokens[key] = urllib.unquote(response_tokens[key])
+
+        state = self._get_value_from_qs(response_tokens, "ACK")
+        self.response = response_tokens
+        self.api_response = response_tokens
+
+        if not state in ["Success", "SuccessWithWarning"]:
+            self.doexpresscheckoutpaymenterror = GENERIC_PAYMENT_ERROR
+            self.apierror = self._get_value_from_qs(
+                response_tokens, "L_LONGMESSAGE0"
+            )
+            return False
+        return True
+
     def RefundTransaction(self, transid, refundtype, currency = None, amount = None, note = "Refund"):
         """
         Performs PayPal API method for refund.
-        
+
         @refundtype: 'Full' or 'Partial'
 
         Possible Responses:
@@ -238,7 +281,7 @@ class PayPal(object):
          'BUILD': '1077585', 'L_ERRORCODE0': '10007', 'CORRELATIONID': '3d8fa24c46c65'}
 
          or
-    
+
          {'REFUNDTRANSACTIONID': '9E679139T5135712L', 'FEEREFUNDAMT': '0.70', 'ACK': 'Success', 'TIMESTAMP': '2009-12-13T09:53:06Z',
          'CURRENCYCODE': 'AUD', 'GROSSREFUNDAMT': '13.89', 'VERSION': '53.0', 'BUILD': '1077585', 'NETREFUNDAMT': '13.19',
          'CORRELATIONID': '6c95d7f979fc1'}
@@ -247,13 +290,13 @@ class PayPal(object):
         if not refundtype in ["Full", "Partial"]:
             self.refundtransactionerror = "Wrong parameters given, We can not perform your refund request"
             return False
-        
+
         parameters = {
             'METHOD' : "RefundTransaction",
             'TRANSACTIONID' : transid,
             'REFUNDTYPE' : refundtype,
         }
-        
+
         if refundtype == "Partial":
             extra_values = {
                 'AMT' : amount,
@@ -267,7 +310,7 @@ class PayPal(object):
         response_tokens = {}
         for token in response.split('&'):
             response_tokens[token.split("=")[0]] = token.split("=")[1]
-            
+
         for key in response_tokens.keys():
             response_tokens[key] = urllib.unquote(response_tokens[key])
 
