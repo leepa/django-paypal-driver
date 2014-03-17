@@ -13,6 +13,7 @@
 
 from cgi import parse_qs
 import urllib
+import urllib2
 
 from django.conf import settings
 
@@ -173,7 +174,7 @@ class PayPal(object):
 
         parameters.update(kwargs)
         query_string = self.signature + urllib.urlencode(parameters)
-        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response = urllib2.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_dict = parse_qs(response)
         self.api_response = response_dict
         state = self._get_value_from_qs(response_dict, "ACK")
@@ -216,7 +217,7 @@ class PayPal(object):
             'TOKEN': token,
         }
         query_string = self.signature + urllib.urlencode(parameters)
-        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response = urllib2.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_dict = parse_qs(response)
         self.api_response = response_dict
         state = self._get_value_from_qs(response_dict, "ACK")
@@ -273,7 +274,7 @@ class PayPal(object):
         }
         parameters.update(kwargs)
         query_string = self.signature + urllib.urlencode(parameters)
-        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response = urllib2.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_tokens = {}
         for token in response.split('&'):
             response_tokens[token.split("=")[0]] = token.split("=")[1]
@@ -314,7 +315,7 @@ class PayPal(object):
 
         parameters.update(kwargs)
         query_string = self.signature + urllib.urlencode(parameters)
-        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response = urllib2.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_tokens = {}
         for token in response.split('&'):
             response_tokens[token.split("=")[0]] = token.split("=")[1]
@@ -345,7 +346,7 @@ class PayPal(object):
 
         parameters.update(kwargs)
         query_string = self.signature + urllib.urlencode(parameters)
-        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response = urllib2.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_tokens = {}
         for token in response.split('&'):
             response_tokens[token.split("=")[0]] = token.split("=")[1]
@@ -417,7 +418,7 @@ class PayPal(object):
             parameters.update(extra_values)
 
         query_string = self.signature + urllib.urlencode(parameters)
-        response = urllib.urlopen(self.NVP_API_ENDPOINT, query_string).read()
+        response = urllib2.urlopen(self.NVP_API_ENDPOINT, query_string).read()
         response_tokens = {}
         for token in response.split('&'):
             response_tokens[token.split("=")[0]] = token.split("=")[1]
